@@ -11,14 +11,18 @@ WAVEFORM_CFG := $(SIM_DIR)/$(SIM_TOP).sim.wcfg
 
 WAVEFORM_VCD := simulation_${PROJ_NAME}.wdb
 
+all: sim
+
 sim: $(WAVEFORM_VCD)
 
 $(WAVEFORM_VCD): $(SRC_DIR)/*.vhdl
+	source $(VIVADO_SETTINGS) && \
 	cd $(BUILD_DIR) && \
-	xelab -debug typical $(SIM_TOP) -s $(SIM_TOP).sim && \
-	xsim $(SIM_TOP).sim -gui -view ../$(WAVEFORM_CFG)
+	xelab -debug typical -top $(SIM_TOP) -snapshot $(SIM_TOP)_snapshot && \
+	xsim $(SIM_TOP)_snapshot -gui -view ../$(WAVEFORM_CFG)
 
-$(SRC_DIR)/*.vhdl: $(BUILD_DIR)
+$(SRC_DIR)/*.vhdl: $(BUILD_DIR) 
+	source $(VIVADO_SETTINGS) && \
 	cd $(BUILD_DIR) && \
 	xvhdl ../$(SRC_DIR)/*.vhdl ../$(SIM_DIR)/*.vhdl
 
@@ -26,5 +30,6 @@ $(BUILD_DIR):
 	source $(VIVADO_SETTINGS) && \
 	mkdir -p $@
 
+.PHONY: clean
 clean:
-	rm -rf $(BUILD_DIR) *.log *.pb
+	rm -rf $(BUILD_DIR) *.log *.pb *.jou *.wdb *.str xsim.dir .Xil

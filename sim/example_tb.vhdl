@@ -6,7 +6,7 @@ end entity;
 
 architecture behav of example_tb is
     
-    component adder is
+    component and_gate is
         port(
             x : in std_logic;
             y : in std_logic;
@@ -23,7 +23,7 @@ begin
     x_in <= '1';
     y_in <= '0';
 
-    U1 : adder port map (
+    U1 : and_gate port map (
         x => x_in,
         y => y_in,
         z => z_out
