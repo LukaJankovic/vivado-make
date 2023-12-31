@@ -1,0 +1,6 @@
+set_param general.maxThreads {{THREADS}}
+read_vhdl [glob ../src/*.vhdl]
+read_xdc ../{{CONST}}
+synth_design -part {{PART}} -top {{TOP}}
+write_checkpoint -force post_synth.dcp
+report_timing_summary -file timing_syn.rpt
