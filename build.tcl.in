@@ -1,6 +1,7 @@
 set_param general.maxThreads {{THREADS}}
-read_vhdl [glob ../src/*.vhdl]
+read_vhdl [glob ../{{SRC}}/*.vhdl]
 read_xdc ../{{CONST}}
+
 synth_design -part {{PART}} -top {{TOP}}
 write_checkpoint -force post_synth.dcp
 report_timing_summary -file timing_syn.rpt
@@ -22,4 +23,4 @@ report_drc -file post_imp_drc.rpt
 write_verilog -force bft_impl_netlist.v
 write_xdc -no_fixed_only -force bft_impl.xdc
 
-write_bitstream -force bft.bit
+write_bitstream -force {{PROJ}}.bit

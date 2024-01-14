@@ -36,13 +36,26 @@ $(BUILD_DIR):
 	source $(VIVADO_SETTINGS) && \
 	mkdir -p $@
 
-synth: $(BUILD_DIR)/synthesize.tcl
+build: $(BUILD_DIR)/build.tcl
 	source $(VIVADO_SETTINGS) && \
 	cd .build && \
-	vivado -mode batch -nojournal -source synthesize.tcl
+	vivado -mode batch -nojournal -source build.tcl
 
-$(BUILD_DIR)/synthesize.tcl: synthesize.tcl.in $(BUILD_DIR)
-	sed -e 's/{{THREADS}}/$(THREADS)/g; s/{{CONST}}/$(CONSTRAINTS)/g; s/{{PART}}/$(PART)/g; s/{{TOP}}/$(TOP)/g' $< > $@
+program: $(BUILD_DIR)/program.tcl
+	source $(VIVADO_SETTINGS) && \
+	cd .build && \
+	vivado -mode batch -nojournal -source program.tcl
+
+$(BUILD_DIR)/build.tcl: build.tcl.in $(BUILD_DIR)
+	sed -e 's/{{THREADS}}/$(THREADS)/g' \
+		-e 's/{{CONST}}/$(CONSTRAINTS)/g' \
+		-e 's/{{PART}}/$(PART)/g' \
+		-e 's/{{TOP}}/$(TOP)/g' \
+		-e 's/{{PROJ}}/$(PROJ_NAME)/g' \
+		-e 's/{{SRC}}/$(SRC_DIR)/g' $< > $@
+
+$(BUILD_DIR)/program.tcl: program.tcl.in $(BUILD_DIR)
+	sed -e 's/{{PROJ}}/$(PROJ_NAME)/g' $< > $@
 
 .PHONY: clean
 clean:
